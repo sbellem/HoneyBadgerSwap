@@ -1,71 +1,43 @@
 version: '3.8'
 
-#volumes:
-#  mpc-bytecodes:
-#  mpc-schedules:
-#  db-p0:
-#  db-p1:
-#  db-p2:
-#  db-p3:
-#  inputmaskshares-p0:
-#  inputmaskshares-p1:
-#  inputmaskshares-p2:
-#  inputmaskshares-p3:
-#  ppdata-p0:
-#  ppdata-p1:
-#  ppdata-p2:
-#  ppdata-p3:
-#  player-data-p0:
-#  player-data-p1:
-#  player-data-p2:
-#  player-data-p3:
-#  persistence-p0:
-#  persistence-p1:
-#  persistence-p2:
-#  persistence-p3:
+volumes:
+  data-p0:
+  data-p1:
+  data-p2:
+  data-p3:
+  #player-data-p0:
+  #player-data-p1:
+  #player-data-p2:
+  #player-data-p3:
+  #persistence-p0:
+  #persistence-p1:
+  #persistence-p2:
+  #persistence-p3:
+  #mpc-bytecodes:
+  #mpc-schedules:
 
 services:
-  #ethnode:
-  #  image: sbellem/ethdevnode:latest
-  #  ports:
-  #    - "8545:8545"
-  #    - "8546:8546"
-
-  #deploycontract:
-  #  image: sbellem/hbswap:go-deps
-  #  environment:
-  #    #POADIR: /opt/poa
-  #    POA_KEYSTORE: /opt/poa/keystore
-  #  working_dir: /go/src/github.com/initc3/HoneyBadgerSwap/src/go
-  #  entrypoint: ""
-  #  command: ["wait-for-it", "ethnode:8545", "--", "go", "run", "deploy/deploy.go", "ethnode"]
-
-  # pre-compiled MPC programs
-  #mpccompile:
-  #  image: sbellem/hbswapmpcbytecodes
-  #  volumes:
-  #    - mpc-bytecodes:/usr/src/Programs/Bytecode
-  #    - mpc-schedules:/usr/src/Programs/Schedules
 
   mpcnode0:
-    image: sbellem/hbswap:aws
+    image: sbellem/hbswap:aws-0.0.16
     environment:
       NODE_ID: 0
       POA_KEYSTORE: /opt/poa/keystore
+      POA_PWD_FILE: /run/secrets/poapwd
+      INPUTMASK_SHARES: /opt/hbswap/data/inputmask-shares
     ports:
       - target: 8080
         published: 8080
         x-aws-protocol: https
-    #volumes:
-    #  #- mpc-bytecodes:/usr/src/hbswap/Programs/Bytecode
-    #  #- mpc-schedules:/usr/src/hbswap/Programs/Schedules
-    #  - db-p0:/opt/hbswap/db
-    #  - inputmaskshares-p0:/opt/hbswap/inputmask-shares
-    #  - ppdata-p0:/opt/hbswap/preprocessing-data
-    #  - persistence-p0:/usr/src/hbswap/Persistence
-    #  - player-data-p0:/usr/src/hbswap/Player-Data
+    volumes:
+      - data-p0:/opt/hbswap/data
+      #- persistence-p0:/usr/src/hbswap/Persistence
+      #- player-data-p0:/usr/src/hbswap/Player-Data
+      #- mpc-bytecodes:/usr/src/hbswap/Programs/Bytecode
+      #- mpc-schedules:/usr/src/hbswap/Programs/Schedules
     secrets:
       - P0.key
+      - poapwd
     working_dir: /usr/src/hbswap
     # NOTE IMPORTANT!
     # The hostname (2nd arg) must be the one of player 0, i.e. "mpcnode0"
@@ -73,24 +45,25 @@ services:
     command: ["bash", "mpc-node.sh"]
 
   mpcnode1:
-    image: sbellem/hbswap:aws
+    image: sbellem/hbswap:aws-0.0.16
     environment:
       NODE_ID: 1
       POA_KEYSTORE: /opt/poa/keystore
+      POA_PWD_FILE: /run/secrets/poapwd
+      INPUTMASK_SHARES: /opt/hbswap/data/inputmask-shares
     ports:
       - target: 8081
         published: 8081
         x-aws-protocol: https
-    #volumes:
-    #  #- mpc-bytecodes:/usr/src/hbswap/Programs/Bytecode
-    #  #- mpc-schedules:/usr/src/hbswap/Programs/Schedules
-    #  - db-p1:/opt/hbswap/db
-    #  - inputmaskshares-p1:/opt/hbswap/inputmask-shares
-    #  - ppdata-p1:/opt/hbswap/preprocessing-data
-    #  - persistence-p1:/usr/src/hbswap/Persistence
-    #  - player-data-p1:/usr/src/hbswap/Player-Data
+    volumes:
+      - data-p1:/opt/hbswap/data
+      #- persistence-p1:/usr/src/hbswap/Persistence
+      #- player-data-p1:/usr/src/hbswap/Player-Data
+      #- mpc-bytecodes:/usr/src/hbswap/Programs/Bytecode
+      #- mpc-schedules:/usr/src/hbswap/Programs/Schedules
     secrets:
       - P1.key
+      - poapwd
     working_dir: /usr/src/hbswap
     # NOTE IMPORTANT!
     # The hostname (2nd arg) must be the one of player 0, i.e. "mpcnode0"
@@ -98,24 +71,25 @@ services:
     command: ["bash", "mpc-node.sh"]
 
   mpcnode2:
-    image: sbellem/hbswap:aws
+    image: sbellem/hbswap:aws-0.0.16
     environment:
       NODE_ID: 2
       POA_KEYSTORE: /opt/poa/keystore
+      POA_PWD_FILE: /run/secrets/poapwd
+      INPUTMASK_SHARES: /opt/hbswap/data/inputmask-shares
     ports:
       - target: 8082
         published: 8082
         x-aws-protocol: https
-    #volumes:
-    #  #- mpc-bytecodes:/usr/src/hbswap/Programs/Bytecode
-    #  #- mpc-schedules:/usr/src/hbswap/Programs/Schedules
-    #  - db-p2:/opt/hbswap/db
-    #  - inputmaskshares-p2:/opt/hbswap/inputmask-shares
-    #  - ppdata-p2:/opt/hbswap/preprocessing-data
-    #  - persistence-p2:/usr/src/hbswap/Persistence
-    #  - player-data-p2:/usr/src/hbswap/Player-Data
+    volumes:
+      - data-p2:/opt/hbswap/data
+      #- persistence-p2:/usr/src/hbswap/Persistence
+      #- player-data-p2:/usr/src/hbswap/Player-Data
+      #- mpc-bytecodes:/usr/src/hbswap/Programs/Bytecode
+      #- mpc-schedules:/usr/src/hbswap/Programs/Schedules
     secrets:
       - P2.key
+      - poapwd
     working_dir: /usr/src/hbswap
     # NOTE IMPORTANT!
     # The hostname (2nd arg) must be the one of player 0, i.e. "mpcnode0"
@@ -123,53 +97,51 @@ services:
     command: ["bash", "mpc-node.sh"]
 
   mpcnode3:
-    image: sbellem/hbswap:aws
+    image: sbellem/hbswap:aws-0.0.16
     environment:
       NODE_ID: 3
       POA_KEYSTORE: /opt/poa/keystore
+      POA_PWD_FILE: /run/secrets/poapwd
+      INPUTMASK_SHARES: /opt/hbswap/data/inputmask-shares
     ports:
       - target: 8083
         published: 8083
         x-aws-protocol: https
-    #volumes:
-    #  #- mpc-bytecodes:/usr/src/hbswap/Programs/Bytecode
-    #  #- mpc-schedules:/usr/src/hbswap/Programs/Schedules
-    #  - db-p3:/opt/hbswap/db
-    #  - inputmaskshares-p3:/opt/hbswap/inputmask-shares
-    #  - ppdata-p3:/opt/hbswap/preprocessing-data
-    #  - persistence-p3:/usr/src/hbswap/Persistence
-    #  - player-data-p3:/usr/src/hbswap/Player-Data
+    volumes:
+      - data-p3:/opt/hbswap/data
+      #- persistence-p3:/usr/src/hbswap/Persistence
+      #- player-data-p3:/usr/src/hbswap/Player-Data
+      #- mpc-bytecodes:/usr/src/hbswap/Programs/Bytecode
+      #- mpc-schedules:/usr/src/hbswap/Programs/Schedules
     secrets:
       - P3.key
+      - poapwd
     working_dir: /usr/src/hbswap
     # NOTE IMPORTANT!
     # The hostname (2nd arg) must be the one of player 0, i.e. "mpcnode0"
     #command: ["wait-for-it", "ethnode:8545", "--", "bash", "mpc-node.sh", "3", "ethnode", "mpcnode0"]
     command: ["bash", "mpc-node.sh"]
 
-#secrets:
-#   P0.key:
-#     name: arn:aws:secretsmanager:eu-west-3:809684608753:secret:mpcnode0_key-3qSj9V
-#     external: true
-#   P1.key:
-#     name: arn:aws:secretsmanager:eu-west-3:809684608753:secret:mpcnode1_key-F51Z10
-#     external: true
-#   P2.key:
-#     name: arn:aws:secretsmanager:eu-west-3:809684608753:secret:mpcnode2_key-KZKRwI
-#     external: true
-#   P3.key:
-#     name: arn:aws:secretsmanager:eu-west-3:809684608753:secret:mpcnode3_key-qEEByY
-#     external: true
-
 secrets:
-   P0.key:
-     file: secrets/P0.key
-   P1.key:
-     file: secrets/P1.key
-   P2.key:
-     file: secrets/P2.key
-   P3.key:
-     file: secrets/P3.key
+  P0.key:
+    file: secrets/P0.key
+  P1.key:
+    file: secrets/P1.key
+  P2.key:
+    file: secrets/P2.key
+  P3.key:
+    file: secrets/P3.key
+  poapwd:
+    file: secrets/poapwd.txt
+  
+   #P0-eth.key:
+   #  file: poa/keystore/server_0/UTC--2021-04-19T15-37-15.803116068Z--37a25f181a43613e2917c650bd6d2f2bb26defd2
+   #P1-eth.key:
+   #  file: poa/keystore/server_1/UTC--2021-04-19T15-37-17.182679135Z--abbf7aedbb03f7fb09b6c7a41623ef67b97570b2
+   #P2-eth.key:
+   #  file: poa/keystore/server_2/UTC--2021-04-19T15-37-18.543896263Z--00377f482929288e237c50578553641a0a2e4ce2
+   #P3-eth.key:
+   #  file: poa/keystore/server_3/UTC--2021-04-19T15-37-19.908957459Z--ae76f3dfa7a7b1556bb49ee41663b7ac6be58da5
 
 
 #x-aws-loadbalancer: "arn:aws:elasticloadbalancing:eu-west-3:809684608753:loadbalancer/app/myloadbalancer/1e6f0dad53bd4979"

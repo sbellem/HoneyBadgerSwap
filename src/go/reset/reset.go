@@ -4,17 +4,15 @@ package main
 
 import (
 	"github.com/initc3/HoneyBadgerSwap/src/go/utils"
-	"os"
 )
 
 const (
-	network  = "testnet"
-	KEYSTORE = os.Getenv("POA_KEYSTORE")
+	network = "testnet"
 )
 
 func main() {
 	conn := utils.GetEthClient(utils.TestnetWsEndpoint)
-	owner := utils.GetAccount(KEYSTORE)
+	owner := utils.GetAccount("server_0")
 
 	utils.ResetPrice(network, conn, owner, utils.EthAddr, utils.HbSwapTokenAddr[network])
 	utils.ResetPrice(network, conn, owner, utils.EthAddr, utils.DAIAddr[network])

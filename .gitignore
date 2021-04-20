@@ -3,3 +3,4 @@ poa/data
 *log/
 *build/
 *__pycache__
+docker/aws/secrets

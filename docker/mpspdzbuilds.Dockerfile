@@ -75,14 +75,14 @@ ENV THRESHOLD 1
 
 # Compile random-shamir
 FROM machines as random-shamir-prep
-ENV INPUTMASK_SHARES "/opt/hbswap/inputmask-shares"
+ENV INPUTMASK_SHARES "/opt/hbswap/data/inputmask-shares"
 RUN mkdir -p $INPUTMASK_SHARES \
-        && echo "PREP_DIR = '-DPREP_DIR=\"/opt/hbswap/inputmask-shares/\"'" >> CONFIG.mine
+        && echo "PREP_DIR = '-DPREP_DIR=\"/opt/hbswap/data/inputmask-shares/\"'" >> CONFIG.mine
 RUN make random-shamir.x
 
 # Compile malicious-shamir-party
 FROM machines as malicious-shamir-party
-ENV PREP_DIR "/opt/hbswap/preprocessing-data"
+ENV PREP_DIR "/opt/hbswap/data/preprocessing-data"
 RUN mkdir -p $PREP_DIR \
-        && echo "PREP_DIR = '-DPREP_DIR=\"/opt/hbswap/preprocessing-data/\"'" >> CONFIG.mine
+        && echo "PREP_DIR = '-DPREP_DIR=\"/opt/hbswap/data/preprocessing-data/\"'" >> CONFIG.mine
 RUN make malicious-shamir-party.x

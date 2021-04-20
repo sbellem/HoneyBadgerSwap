@@ -11,7 +11,7 @@ setup_data() {
     # Copy the public keys of all players
     cp /opt/hbswap/public-keys/* Player-Data/
     # Symlink to the private key, to where MP-SPDZ expects it to be (under Player-Data/).
-    ln -s /run/secrets/P$NODE_ID.key Player-Data/P$NODE_ID.key
+    ln --symbolic --force /run/secrets/P$NODE_ID.key Player-Data/P$NODE_ID.key
 }
 
 
@@ -20,12 +20,13 @@ httpserver() {
 }
 
 mpcserver() {
-    if [ $NODE_ID -eq 0 ]; then
-        mkdir -p /usr/src/hbswap/log
-        ./mpcserver -config $config -id $NODE_ID > /usr/src/hbswap/log/mpc_server_$NODE_ID.log 2>&1
-    else
-        ./mpcserver -config $config -id $NODE_ID
-    fi
+    ./mpcserver -config $config -id $NODE_ID
+    #if [ $NODE_ID -eq 0 ]; then
+    #    mkdir -p /usr/src/hbswap/log
+    #    ./mpcserver -config $config -id $NODE_ID > /usr/src/hbswap/log/mpc_server_$NODE_ID.log 2>&1
+    #else
+    #    ./mpcserver -config $config -id $NODE_ID
+    #fi
 }
 
 setup_data

@@ -49,19 +49,19 @@ def key_total_supply(token_A, token_B):
 
 
 def location_db(server_id):
-    db_path = os.getenv("DB_PATH", "/opt/hbswap/db")
+    db_path = os.getenv("DB_PATH", "/opt/hbswap/data/db")
     return f"{db_path}/server-{server_id}"
 
 
 def location_inputmask(server_id):
     inputmask_shares_dir = os.getenv(
-        "INPUTMASK_SHARES", "/opt/hbswap/inputmask-shares",
+        "INPUTMASK_SHARES", "/opt/hbswap/data/inputmask-shares",
     )
     return f"{inputmask_shares_dir}/4-MSp-255/Randoms-MSp-P{server_id}"
 
 
 def location_private_output(server_id):
-    prep_dir = os.getenv("PREP_DIR", "/opt/hbswap/preprocessing-data")
+    prep_dir = os.getenv("PREP_DIR", "/opt/hbswap/data/preprocessing-data")
     return f"{prep_dir}/Private-Output-{server_id}"
 
 
@@ -83,7 +83,7 @@ def openDB(location):
             time.sleep(10)
 
 
-def get_value(db, key): # return: hex
+def get_value(db, key):  # return: hex
     try:
         return bytes(db.Get(key))
     except KeyError:
@@ -106,7 +106,7 @@ def get_inverse(a):
 
 
 def fix_to_float(x):
-    return 1. * x / fp
+    return 1.0 * x / fp
 
 
 def hex_to_int(x):
@@ -140,9 +140,11 @@ def reconstruct(shares, n):
     print(inputmask)
     return inputmask
 
-def recover_input(db, masked_value, idx): # return: hex
+
+def recover_input(db, masked_value, idx):  # return: hex
     input_mask_share = hex_to_int(get_value(db, key_inputmask(idx)))
     return int_to_hex((masked_value - input_mask_share) % p)
+
 
 n = 4
 t = 1

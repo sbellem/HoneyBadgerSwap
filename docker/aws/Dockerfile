@@ -39,6 +39,11 @@ RUN bash compile.sh
 FROM python:3.8
 
 ENV PYTHONUNBUFFERED 1
+ENV HBSWAP_HOME /usr/src/hbswap
+ENV LD_LIBRARY_PATH /usr/local/lib
+ENV INPUTMASK_SHARES "/opt/hbswap/data/inputmask-shares"
+ENV PREP_DIR "/opt/hbswap/data/preprocessing-data"
+ENV DB_PATH "/opt/hbswap/data/db"
 
 # MP-SPDZ
 # TODO: review dependencies as some of them may not be needed.
@@ -54,7 +59,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
                 yasm \
         && rm -rf /var/lib/apt/lists/*
 # mpir
-ENV LD_LIBRARY_PATH /usr/local/lib
 RUN mkdir -p /usr/local/share/info
 COPY --from=initc3/mpir:55fe6a9 /usr/local/mpir/lib/libmpir*.*a /usr/local/lib/
 COPY --from=initc3/mpir:55fe6a9 /usr/local/mpir/lib/libmpir.so.23.0.3 /usr/local/lib/
@@ -68,19 +72,15 @@ RUN set -ex \
     && ln -s libmpirxx.so.8.4.3 libmpirxx.so \
     && ln -s libmpirxx.so.8.4.3 libmpirxx.so.8
 
-ENV HBSWAP_HOME /usr/src/hbswap
 WORKDIR $HBSWAP_HOME
-ENV INPUTMASK_SHARES "/opt/hbswap/inputmask-shares"
-ENV PREP_DIR "/opt/hbswap/preprocessing-data"
-COPY --from=sbellem/mpspdz:2cf97686-randomshamirprep\
+COPY --from=sbellem/mpspdz:2cf97686-randomshamirprep-0.0.1\
                 /usr/src/MP-SPDZ/random-shamir.x /usr/src/hbswap/
-COPY --from=sbellem/mpspdz:2cf97686-maliciousshamirparty \
+COPY --from=sbellem/mpspdz:2cf97686-maliciousshamirparty-0.0.1 \
                 /usr/src/MP-SPDZ/malicious-shamir-party.x /usr/src/hbswap/
 RUN mkdir -p $INPUTMASK_SHARES $PREP_DIR Persistence Player-Data
 COPY testkeys/public /opt/hbswap/public-keys
 #############################################################################
 
-ENV DB_PATH /opt/hbswap/db
 RUN mkdir -p $DB_PATH
 
 # GO (server) dependencies
@@ -108,7 +108,7 @@ ARG http_server_config=docker/aws/server.toml
 COPY $http_server_config /opt/hbswap/conf/server.toml
 COPY scripts/mpc-node.sh /usr/src/hbswap/mpc-node.sh
 COPY scripts/wait-for-it.sh /usr/local/bin/wait-for-it
-COPY poa/keystore /opt/poa/keystore
+COPY docker/aws/poa/keystore /opt/poa/keystore
 
 # MPC bytecodes and schedules -- from the compilation stage
 WORKDIR $HBSWAP_HOME

@@ -33,36 +33,36 @@ var (
 	minBalance = big.NewInt(300000000000000000)
 
 	chainID = map[string]string{
-		"testnet": "42",
+		"testnet":    "42",
 		"privatenet": "123",
 	}
 
 	EthAddr    = common.HexToAddress("0x0000000000000000000000000000000000000000")
 	HbswapAddr = map[string]common.Address{
-		"testnet":    common.HexToAddress("0xfef9601461e3bb72d99eca3a197f4be42798429a"),
+		"testnet":    common.HexToAddress("0xe35b498c3e11f22dcf96695d881fe524b1a9ee8e"),
 		"privatenet": common.HexToAddress("0xf74eb25ab1785d24306ca6b3cbff0d0b0817c5e2"),
 	}
 	HbSwapTokenAddr = map[string]common.Address{
-		"testnet":    common.HexToAddress("0x78160ee9e55fd81626f98d059c84d21d8b71bfda"),
+		"testnet": common.HexToAddress("0x78160ee9e55fd81626f98d059c84d21d8b71bfda"),
 	}
 	DAIAddr = map[string]common.Address{
-		"testnet":    common.HexToAddress("0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa"),
+		"testnet": common.HexToAddress("0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa"),
 	}
 	//TODO: delete it after testing
 	UserAddr = common.HexToAddress("0xc33a4b5b609fcc294dca060347761226e78c0b7a")
 
 	HttpPort = 8545
-	WsPort  = 8546
+	WsPort   = 8546
 
 	TestnetHttpEndpoint = "https://kovan.infura.io/v3/6a82d2519efb4d748c02552e02e369c1"
 	TestnetWsEndpoint   = "wss://kovan.infura.io/ws/v3/6a82d2519efb4d748c02552e02e369c1"
 
-	AddLiquidity = "0xec7d4752dd44bf7fc59045c9d80163de2a1b9dbd9032d11cb1156f7f867c6411"
-	InitPool = "0xfaaebcb30b1b421f4f2ca7f2620e5add6a64532c087ee0646fd665a33d36fdf5"
+	AddLiquidity    = "0xec7d4752dd44bf7fc59045c9d80163de2a1b9dbd9032d11cb1156f7f867c6411"
+	InitPool        = "0xfaaebcb30b1b421f4f2ca7f2620e5add6a64532c087ee0646fd665a33d36fdf5"
 	RemoveLiquidity = "0xa8dbaaebbb025c88e9e34c84635cd8238043556e9af43fb161508c898a8e1ef9"
-	SecretDeposit = "0x07c06144435b7d2bdccf9ee7e5a7022c63382ac7c3a0e14ed08b5969dedf0ecf"
-	SecretWithdraw = "0x4ef3cc4825a92c3b6922acc8a45152cc96ef48463e8ed500dacd5df9e29a67f3"
-	Trade = "0x2b4d91cd20cc8800407e3614b8466a6f0729ac3b1fa43d4e2b059ff5593cbae6"
+	SecretDeposit   = "0x07c06144435b7d2bdccf9ee7e5a7022c63382ac7c3a0e14ed08b5969dedf0ecf"
+	SecretWithdraw  = "0x4ef3cc4825a92c3b6922acc8a45152cc96ef48463e8ed500dacd5df9e29a67f3"
+	Trade           = "0x2b4d91cd20cc8800407e3614b8466a6f0729ac3b1fa43d4e2b059ff5593cbae6"
 )
 
 func ExecCmd(cmd *exec.Cmd) string {
@@ -113,14 +113,17 @@ func GetAccount(account string) *bind.TransactOpts {
 		}
 	}
 
-	//bytes, err := ioutil.ReadFile(dir + name)
-	bytes, err := ioutil.ReadFile(filepath.Join(dir, name))
+	accountDataBytes, err := ioutil.ReadFile(filepath.Join(dir, name))
+	if err != nil {
+		log.Fatal(err)
+	}
+	passwordBytes, err := ioutil.ReadFile(os.Getenv("POA_PWD_FILE"))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	password := ""
-	auth, err := bind.NewTransactor(strings.NewReader(string(bytes)), password)
+	password := strings.TrimSuffix(string(passwordBytes), "\n")
+	auth, err := bind.NewTransactor(strings.NewReader(string(accountDataBytes)), password)
 	if err != nil {
 		log.Fatal(err)
 	}
