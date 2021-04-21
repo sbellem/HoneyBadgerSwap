@@ -1,6 +1,4 @@
-import time
-
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
@@ -11,7 +9,7 @@ from ..utils import (
     location_db,
     openDB,
     get_value,
-    hex_to_int
+    hex_to_int,
 )
 
 app = FastAPI()
@@ -48,12 +46,10 @@ async def get_inputmasks(mask_idxes: str):
         try:
             share = hex_to_int(bytes(db.Get(key_inputmask(mask_idx))))
         except KeyError:
-            print('key error: ', mask_idx)
-            res = ''
+            print("key error: ", mask_idx)
+            res = ""
             break
-        res += (
-            f"{',' if len(res) > 0 else ''}{share}"
-        )
+        res += f"{',' if len(res) > 0 else ''}{share}"
     data = {"inputmask_shares": res}
     print(f"s{settings.NODE_ID} response to GET /inputmasks/{mask_idxes}: {res}")
     return data
@@ -63,7 +59,7 @@ async def get_inputmasks(mask_idxes: str):
 async def get_price(trade_seq: str):
     print(f"s{settings.NODE_ID} processing request GET /price/{trade_seq}")
     db = openDB(location_db(settings.NODE_ID))
-    res = ''
+    res = ""
     try:
         res = hex_to_int(bytes(db.Get(key_individual_price(trade_seq))))
     except KeyError:

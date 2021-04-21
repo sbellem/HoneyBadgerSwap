@@ -78,8 +78,9 @@ def openDB(location):
     while True:
         try:
             return leveldb.LevelDB(location)
-        except leveldb.LevelDBError:
+        except leveldb.LevelDBError as err:
             print("db not ready")
+            print(err)
             time.sleep(10)
 
 

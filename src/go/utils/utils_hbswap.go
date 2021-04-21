@@ -381,7 +381,7 @@ func GetInputmaskCnt(network string, conn *ethclient.Client) int64 {
 	}
 
 	cnt, _ := hbswapInstance.InputmaskCnt(nil)
-	log.Printf("Inputmask shares used: %v\n", cnt)
+	//log.Printf("Inputmask shares used: %v\n", cnt)
 
 	return cnt.Int64()
 }
