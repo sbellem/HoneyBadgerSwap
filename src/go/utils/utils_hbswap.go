@@ -383,7 +383,7 @@ func GetInputmaskCnt(network string, conn *ethclient.Client) int64 {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("Inputmask shares used: %v\n", cnt)
+	//log.Printf("Inputmask shares used: %v\n", cnt)
 	return cnt.Int64()
 }
 
