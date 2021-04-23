@@ -10,6 +10,7 @@ import (
 	"github.com/initc3/HoneyBadgerSwap/src/go_bindings/hbswap"
 	"log"
 	"math/big"
+	"time"
 )
 
 //func Deposit(network string, conn *ethclient.Client, auth *bind.TransactOpts, tokenAddr common.Address, amt *big.Int) {
