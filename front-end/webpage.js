@@ -3,7 +3,7 @@ const n = 4
 const t = 1
 const fp = 1 << 16
 
-const hbswapAddr = '0xe35b498c3e11f22dcf96695d881fe524b1a9ee8e'
+const hbswapAddr = '0xd2acd672Afc5b32cDD07f839963BfbF943577bF4'
 const ethAddr = '0x0000000000000000000000000000000000000000'
 const hbsAddr = "0x78160ee9e55fd81626f98d059c84d21d8b71bfda"
 const daiAddr = "0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa"
@@ -13,10 +13,8 @@ const checkPointInterval = 20 * 1000
 const feeRate = 0.003
 const displayPrecision = 4
 
-const host = 'https://www.honeybadgerswap.org'
+const host = 'https://galois.honeybadgerswap.org'
 const basePort = 8080
-// const host = 'http://localhost'
-// const basePort = 58080
 
 // **** Internal functions ****
 
@@ -227,7 +225,6 @@ async function trade() {
     const masks = await getInputmasks(2, idxes)
     $('#tradeMasks').text(masks)
 
-    // Step 4: Publish masked inputs
     const slippage = $( '#slippage' ).val()
     const minReceived = amtTradeTo * (1 - slippage)
 
@@ -250,7 +247,6 @@ async function trade() {
     htmlContent += ' <a href="https://kovan.etherscan.io/tx/' + tx["transactionHash"] + '">' + 'trade' + '</a>'
     $('#tradeTxLink').html(htmlContent)
 
-    // Step 5: Get price of current trade
     data = tx['events']['Trade']['raw']['data']
     const tradeSeq = getInt(data, 0)
     $('#seq').text(tradeSeq)
@@ -767,8 +763,6 @@ async function init() {
     tokenList.set('ETH', ethAddr)
     tokenList.set('HBS', hbsAddr)
     tokenList.set('DAI', daiAddr)
-    // tokenList.set('token1', token1)
-    // tokenList.set('token2', token2)
     window.contractList = new Map()
     for (let [k, v] of tokenList) {
         contractList.set(v, new web3.eth.Contract(tokenABI, v))
