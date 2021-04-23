@@ -9,8 +9,8 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/initc3/HoneyBadgerSwap/src/go/utils"
-	"github.com/initc3/HoneyBadgerSwap/src/go_bindings/hbswap"
 	"github.com/initc3/HoneyBadgerSwap/src/go_bindings/hbSwapToken"
+	"github.com/initc3/HoneyBadgerSwap/src/go_bindings/hbswap"
 	"log"
 	"math/big"
 )
@@ -20,7 +20,7 @@ func DeployHbSwap(conn *ethclient.Client, auth *bind.TransactOpts) common.Addres
 
 	var servers []common.Address
 	for i := 0; i < utils.N; i++ {
-		transactOpt := utils.GetAccount(fmt.Sprintf("poa/keystore/server_%v", i))
+		transactOpt := utils.GetAccount(fmt.Sprintf("server_%v", i))
 		servers = append(servers, transactOpt.From)
 	}
 
@@ -69,7 +69,7 @@ func main() {
 	//conn := utils.GetEthClient(ethUrl)
 
 	conn := utils.GetEthClient(utils.TestnetWsEndpoint)
-	owner := utils.GetAccount("poa/keystore/server_0")
+	owner := utils.GetAccount("server_0")
 
 	DeployHbSwap(conn, owner)
 	//DeployToken(conn, owner)
